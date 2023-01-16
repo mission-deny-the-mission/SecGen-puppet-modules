@@ -31,7 +31,7 @@ class rancher::install {
     mode => '0755',
   } ->
   exec {'configure-rancher':
-    command => 'python3 /root/setup-rancher-v2.py',
+    command => 'python3 /root/setup-rancher.py',
     environment => [],
   }
 }
