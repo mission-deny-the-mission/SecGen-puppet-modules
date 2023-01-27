@@ -1,6 +1,7 @@
 import requests
 import socket
 import os
+import time
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.connect(("8.8.8.8", 80))
@@ -24,6 +25,13 @@ print(response)
 
 data = {"type":"registrationToken"}
 response = requests.post("http://localhost:8080/v2-beta/projects/1a5/registrationtoken", json=data, proxies=proxies)
-key = response.json()["uuid"]
+#link = response.json()["actions"]["activate"]
+link = response.json()["links"]["self"]
+print(link)
 
-os.system("docker run -d --restart=unless-stopped --privileged -v /var/run/docker.sock:/var/run/docker.sock -v /var/lib/rancher:/var/lib/rancher rancher/agent:v1.2.11 http://{}:8080/v1/scripts/{}".format(ip, key))
+time.sleep(2)
+
+response = requests.get(link, proxies=proxies)
+command = response.json()["command"]
+print(command)
+os.system(command)
