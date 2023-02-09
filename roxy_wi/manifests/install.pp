@@ -1,5 +1,9 @@
 class roxy_wi::install {
-  Exec { path => [ '/bin/', '/sbin/', '/usr/bin', '/usr/sbin' ] }
+  Exec {path => ['/bin', '/usr/bin', '/usr/local/bin', '/sbin', '/usr/sbin'],
+    environment => ['http_proxy=http://172.22.0.51:3128',
+      'https_proxy=http://172.22.0.51:3128',
+      'ftp_proxy=http://172.22.0.51:3128'] }
+
 
   ensure_packages('apache2')
   ensure_packages('rsync')
@@ -29,7 +33,7 @@ class roxy_wi::install {
   ensure_packages('python3-paramiko')
 
   file { '/var/www/roxy-wi-master.zip':
-    source => 'puppet:///modules/roxywi_exploit/roxy-wi-master.zip',
+    source => 'puppet:///modules/roxy_wi/roxy-wi-master.zip',
     owner => www-data,
     mode => '0755',
   } ->
@@ -117,7 +121,7 @@ class roxy_wi::install {
   exec { 'change-lib-owner':
     command => 'chown -R www-data:www-data /var/lib/roxy-wi/',
   } ->
-  exec { 'change-www-owner':
+  exec { 'change-www-owner2':
     command => 'chown -R www-data:www-data /var/www/haproxy-wi/',
   } ->
   exec { 'daemon-reload':
