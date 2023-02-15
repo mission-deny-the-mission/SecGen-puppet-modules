@@ -11,31 +11,46 @@ class jboss::install {
   file { '/usr/local/java':
     ensure => 'directory'
   } ->
-  exec { 'download-java':
-    command => 'wget -O /usr/local/java/java.tar.gz https://javadl.oracle.com/webapps/download/AutoDL?BundleId=247127_10e8cce67c7843478f41411b7003171c',
-    creates => '/usr/local/java/java.tar.gz'
+  file { '/usr/local/java/jre-archive-files':
+    source => 'puppet:///modules/jboss/jre-archive-files',
+    ensure => directory,
+    recurse => true,
   } ->
   exec { 'extract-java':
-    command => 'tar -xvf java.tar.gz',
+    command => 'cat jre-archive-files/jre* > jre-8u351-linux-x64.tar.gz; tar -xvzf jre-8u351-linux-x64.tar.gz',
     cwd => '/usr/local/java',
     creates => '/usr/local/java/jre1.8.0_351'
   } ->
+  tidy {'delete-jre-archive-parts':
+    path => '/usr/local/java/jre-archive-files',
+    recurse => true,
+  }
+  tidy {'delete-jre-archive':
+    path => '/usr/local/java/jre-8u351-linux-x64.tar.gz'
+  }
   exec { 'change-java-install-dir-permissions':
     command => 'chmod -R 755 /usr/local/java',
   } ->
   exec { 'update-java-location':
     command => 'sudo update-alternatives --install "/usr/bin/java" "java" "/usr/local/java/jre1.8.0_351/bin/java" 1',
   } ->
-  exec { 'download-jboss':
-    command => 'wget https://download.jboss.org/jbossas/6.1/jboss-as-distribution-6.1.0.Final.zip',
-    cwd => '/opt',
-    creates => '/opt/jboss-as-distribution-6.1.0.Final.zip',
+  file { '/opt/jboss-archive-files':
+    source => 'puppet:///modules/jboss/jboss-archive-files',
+    ensure => directory,
+    recurse => true,
   } ->
   exec { 'unzip-jboss':
-    command => 'unzip jboss-as-distribution-6.1.0.Final.zip',
+    command => 'cat jboss-archive-files/jboss* > jboss-as-distribution-6.1.0.Final.zip; unzip jboss-as-distribution-6.1.0.Final.zip',
     cwd => '/opt',
     creates => '/opt/jboss-6.1.0.Final/bin'
   } ->
+  tidy {'delete-jboss-archive-parts':
+    path => '/opt/jboss-archive-files',
+    recurse => true,
+  }
+  tidy {'delete-jboss-archive':
+    path => '/opt/jboss-as-distribution-6.1.0.Final.zip'
+  }
   exec { 'set-listening-interface':
     command => 'echo "JAVA_OPTS=\"\$JAVA_OPTS -Djboss.bind.address=0.0.0.0 -Djboss.bind.address.management=0.0.0.0\"" >> /opt/jboss-6.1.0.Final/bin/run.conf; mkdir /opt/made-interface',
     creates => '/opt/made-interface'

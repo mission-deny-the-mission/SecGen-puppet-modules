@@ -4,7 +4,7 @@ class jboss::flags {
   $leaked_filenames = ["flagsecret"] ##$secgen_parameters['leaked_filenames']
   $strings_to_leak = ["flag message"] ##$secgen_parameters['strings_to_leak']
   
-  ::secgen_functions::leak_files { 'jboss-flag.txt':
+  ::secgen_functions::leak_files { 'jboss-flag':
     storage_directory => "/opt/jboss-6.1.0.Final",
     leaked_filenames  => $leaked_filenames,
     strings_to_leak   => $strings_to_leak,

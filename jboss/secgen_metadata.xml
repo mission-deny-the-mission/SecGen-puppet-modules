@@ -10,7 +10,7 @@
     This invovles sending a serialized Java object to JBOSS EAP over a network.</description>
 
   <type>Java web exploit</type>
-  <privilege>?</privilege>
+  <privilege>root_rwx</privilege>
   <access>remote</access>
   <platform>linux</platform>
   <difficulty>medium</difficulty>
