@@ -69,34 +69,29 @@ class roxy_wi::install {
     cwd => '/var/www',
   } ->
 
-  exec { 'restart-apache2':
-    command => 'systemctl restart apache2',
-    cwd => '/var/www',
-  } ->
-
   exec { 'configure-logging':
     command => 'cp haproxy-wi/config_other/logrotate/* /etc/logrotate.d/',
     cwd => '/var/www',
   } ->
 
-  file { '/var/lib/roxy-wi/keys/':
-    ensure => directory,
-  } ->
-  file { '/var/lib/roxy-wi/configs/':
-    ensure => directory,
-  } ->
-  file { '/var/lib/roxy-wi/configs/hap_config/':
-    ensure => directory,
-  } ->
-  file { '/var/lib/roxy-wi/configs/kp_config/':
-    ensure => directory,
-  } ->
-  file { '/var/lib/roxy-wi/configs/nginx_config/':
-    ensure => directory,
-  } ->
-  file { '/var/lib/roxy-wi/configs/apache_config/':
-    ensure => directory,
-  } ->
+#  file { '/var/lib/roxy-wi/keys/':
+#    ensure => directory,
+#  } ->
+#  file { '/var/lib/roxy-wi/configs/':
+#    ensure => directory,
+#  } ->
+#  file { '/var/lib/roxy-wi/configs/hap_config/':
+#    ensure => directory,
+#  } ->
+#  file { '/var/lib/roxy-wi/configs/kp_config/':
+#    ensure => directory,
+#  } ->
+#  file { '/var/lib/roxy-wi/configs/nginx_config/':
+#    ensure => directory,
+#  } ->
+#  file { '/var/lib/roxy-wi/configs/apache_config/':
+#    ensure => directory,
+#  } ->
   file { '/var/www/haproxy-wi/log/':
     ensure => directory,
   } ->
@@ -118,23 +113,23 @@ class roxy_wi::install {
   exec { 'change-www-owner':
     command => 'chown -R www-data:www-data /var/www/haproxy-wi/',
   } ->
-  exec { 'change-lib-owner':
-    command => 'chown -R www-data:www-data /var/lib/roxy-wi/',
-  } ->
+  #exec { 'change-lib-owner':
+  #  command => 'chown -R www-data:www-data /var/lib/roxy-wi/',
+  #} ->
   exec { 'change-www-owner2':
     command => 'chown -R www-data:www-data /var/www/haproxy-wi/',
   } ->
   exec { 'daemon-reload':
     command => 'systemctl daemon-reload',
   } ->
-  exec { 'restart-httpd':
-    command => 'systemctl restart httpd',
+  exec { 'restart-apache2':
+    command => 'systemctl restart apache2',
   } ->
   exec { 'restart-rsyslog':
     command => 'systemctl restart rsyslog',
   } ->
   exec { 'create-database':
-    command => './create_db.py',
+    command => 'python3 create_db.py',
     cwd => '/var/www/haproxy-wi/app',
   }
 }
