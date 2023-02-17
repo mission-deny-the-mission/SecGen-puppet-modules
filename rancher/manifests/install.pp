@@ -1,9 +1,7 @@
 class rancher::install {
   Exec {
-    path => ['/bin', '/usr/bin', '/usr/local/bin', '/sbin', '/usr/sbin'],
-    environment => ['http_proxy=http://172.22.0.51:3128',
-      'https_proxy=http://172.22.0.51:3128',
-      'ftp_proxy=http://172.22.0.51:3128'] }
+    path => ['/bin', '/usr/bin', '/usr/local/bin', '/sbin', '/usr/sbin']
+  }
 
   ensure_packages(['apt-transport-https', 'ca-certificates', 'curl', 'gnupg2', 'software-properties-common'])
 
