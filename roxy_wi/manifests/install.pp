@@ -1,8 +1,9 @@
 class roxy_wi::install {
-  Exec {path => ['/bin', '/usr/bin', '/usr/local/bin', '/sbin', '/usr/sbin'],
-    environment => ['http_proxy=http://172.22.0.51:3128',
-      'https_proxy=http://172.22.0.51:3128',
-      'ftp_proxy=http://172.22.0.51:3128'] }
+  Exec {path => ['/bin', '/usr/bin', '/usr/local/bin', '/sbin', '/usr/sbin']}
+#  Exec {path => ['/bin', '/usr/bin', '/usr/local/bin', '/sbin', '/usr/sbin'],
+#    environment => ['http_proxy=http://172.22.0.51:3128',
+#      'https_proxy=http://172.22.0.51:3128',
+#      'ftp_proxy=http://172.22.0.51:3128'] }
 
 
   ensure_packages('apache2')
@@ -16,6 +17,7 @@ class roxy_wi::install {
   ensure_packages('libapache2-mod-wsgi-py3')
   ensure_packages('openssl')
   ensure_packages('sshpass')
+  ensure_packages('rsyslog')
 
   ensure_packages('python3')
   ensure_packages('python3-ldap')
@@ -73,25 +75,28 @@ class roxy_wi::install {
     command => 'cp haproxy-wi/config_other/logrotate/* /etc/logrotate.d/',
     cwd => '/var/www',
   } ->
+  file {'/var/lib/roxy-wi':
+    ensure => directory,
+  } ->
 
-#  file { '/var/lib/roxy-wi/keys/':
-#    ensure => directory,
-#  } ->
-#  file { '/var/lib/roxy-wi/configs/':
-#    ensure => directory,
-#  } ->
-#  file { '/var/lib/roxy-wi/configs/hap_config/':
-#    ensure => directory,
-#  } ->
-#  file { '/var/lib/roxy-wi/configs/kp_config/':
-#    ensure => directory,
-#  } ->
-#  file { '/var/lib/roxy-wi/configs/nginx_config/':
-#    ensure => directory,
-#  } ->
-#  file { '/var/lib/roxy-wi/configs/apache_config/':
-#    ensure => directory,
-#  } ->
+  file { '/var/lib/roxy-wi/keys/':
+    ensure => directory,
+  } ->
+  file { '/var/lib/roxy-wi/configs/':
+    ensure => directory,
+  } ->
+  file { '/var/lib/roxy-wi/configs/hap_config/':
+    ensure => directory,
+  } ->
+  file { '/var/lib/roxy-wi/configs/kp_config/':
+    ensure => directory,
+  } ->
+  file { '/var/lib/roxy-wi/configs/nginx_config/':
+    ensure => directory,
+  } ->
+  file { '/var/lib/roxy-wi/configs/apache_config/':
+    ensure => directory,
+  } ->
   file { '/var/www/haproxy-wi/log/':
     ensure => directory,
   } ->
@@ -110,14 +115,11 @@ class roxy_wi::install {
     cwd => '/',
   } ->
 
-  exec { 'change-www-owner':
-    command => 'chown -R www-data:www-data /var/www/haproxy-wi/',
+  exec { 'change-www-owner-permissions':
+    command => 'chown -R www-data:www-data /var/www; chmod +x -R /var/www',
   } ->
-  #exec { 'change-lib-owner':
-  #  command => 'chown -R www-data:www-data /var/lib/roxy-wi/',
-  #} ->
-  exec { 'change-www-owner2':
-    command => 'chown -R www-data:www-data /var/www/haproxy-wi/',
+  exec { 'change-lib-owner':
+    command => 'chown -R www-data:www-data /var/lib/roxy-wi/',
   } ->
   exec { 'daemon-reload':
     command => 'systemctl daemon-reload',

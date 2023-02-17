@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<vulnerability xmlns="http://github.com/cliffe/SecGen/vulnerability"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://github.com/cliffe/SecGen/vulnerability">
+
+  <require>update</require>
+</vulnerability>
