@@ -2,12 +2,17 @@ import requests
 import socket
 import os
 import time
+import debinterface
+
+def get_ip():
+    adapters = debinterface.Interfaces()
+    for adapter in adapters:
+        if "ens" in adapter.attributes['name'] and adapter.attributes['source'] == 'static':
+            return adapter.attributes['address']
+    raise Exception("Could not find address")
 
 def setup_rancher():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    ip = (s.getsockname()[0])
-    s.close()
+    ip = get_ip()
 
     proxies = {
         "http": None,

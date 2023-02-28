@@ -3,7 +3,7 @@ class rancher::install {
     path => ['/bin', '/usr/bin', '/usr/local/bin', '/sbin', '/usr/sbin']
   }
 
-  ensure_packages(['apt-transport-https', 'ca-certificates', 'curl', 'gnupg2', 'software-properties-common'])
+  ensure_packages(['apt-transport-https', 'ca-certificates', 'curl', 'gnupg2', 'software-properties-common', 'python3-pip'])
 
   docker::run {'rancher-server':
     image => 'rancher/server',
@@ -25,6 +25,9 @@ class rancher::install {
   file {'/root/setup-rancher.py':
     source => 'puppet:///modules/rancher/setup-rancher.py',
     mode => '0755',
+  } ->
+  exec {'install-debinterface':
+    exec => 'pip3 install debinterface'
   } ->
 #  exec {'configure-rancher':
 #    command => 'python3 /root/setup-rancher.py',
