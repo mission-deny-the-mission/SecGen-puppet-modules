@@ -5,7 +5,7 @@ import time
 import debinterface
 
 def get_ip():
-    adapters = debinterface.Interfaces()
+    adapters = debinterface.Interfaces().adapters
     for adapter in adapters:
         if "ens" in adapter.attributes['name'] and adapter.attributes['source'] == 'static':
             return adapter.attributes['address']
