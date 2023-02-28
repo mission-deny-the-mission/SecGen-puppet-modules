@@ -27,13 +27,13 @@ class rancher::install {
     mode => '0755',
   } ->
   exec {'install-debinterface':
-    exec => 'pip3 install debinterface'
+    command => 'pip3 install debinterface'
   } ->
 #  exec {'configure-rancher':
 #    command => 'python3 /root/setup-rancher.py',
 #    environment => [],
 #  } ->
   exec {'set-rancher-configuration-file-to-run-at-boot-via-crontab':
-    command => 'echo "@reboot root /usr/bin/python3 /root/setup-rancher.py" >> /etc/crontab; chmod 644 /etc/crontab'
+    command => 'echo "@reboot root /usr/bin/python3 /root/setup-rancher.py >> /root/rancher_config_log.txt" >> /etc/crontab; chmod 644 /etc/crontab'
   }
 }
