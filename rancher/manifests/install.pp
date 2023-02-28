@@ -36,6 +36,6 @@ class rancher::install {
 #    environment => [],
 #  } ->
   exec {'set-rancher-configuration-file-to-run-at-boot-via-crontab':
-    command => 'echo "@reboot root /usr/bin/python3 /root/setup-rancher.py > /root/rancher_config_log.txt" >> /etc/crontab; chmod 644 /etc/crontab'
+    command => 'echo "@reboot root /usr/bin/python3 /root/setup-rancher.py >> /root/rancher_config_log.txt 2>> /root/rancher_config_log.txt" >> /etc/crontab; chmod 644 /etc/crontab'
   }
 }
