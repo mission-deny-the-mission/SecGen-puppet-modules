@@ -20,7 +20,9 @@ class rancher::install {
 #  docker::image {'rancher/healthcheck': } ->
 #  docker::image {'rancher/metadata': } ->
 #  docker::image {'rancher/scheduler': } ->
-  docker::image {'rancher/agent': } ->
+  docker::image {'rancher/agent':
+    tag => 'v1.2.11',
+  } ->
   docker::image {'alpine': } ->
   file {'/root/setup-rancher.py':
     source => 'puppet:///modules/rancher/setup-rancher.py',
